@@ -1,2 +1,2 @@
 build:
-	g++ -o switch_desktop *.cpp *.h
+	g++ -o switch_workspace *.cpp *.h json/json.h
