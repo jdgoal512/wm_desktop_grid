@@ -8,6 +8,12 @@
 #include "config.h"
 #include "i3.h"
 
+/**
+ * Executes a shell command
+ * 
+ * @param command The command to execute
+ * @return stdout of the command
+ */
 std::string exec(const char* command) {
     char buffer[128];
     std::string result = "";
@@ -27,7 +33,13 @@ std::string exec(const char* command) {
     return result;
 }
 
-std::string i3GetCurrentMonitor(std::string IPCCmd) {
+/**
+ * Gets the active montor name in i3/sway
+ * 
+ * @param IPCCmd The ipc command (i3-msg for i3, swaymsg for sway)
+ * @return monitor name
+ */
+std::string i3GetActiveMonitor(std::string IPCCmd) {
     std::string jsonOutputs = exec((IPCCmd + " -t get_outputs").c_str());
     const int jsonOutputsLength = static_cast<int>(jsonOutputs.length());
     Json::Value root;
@@ -46,8 +58,15 @@ std::string i3GetCurrentMonitor(std::string IPCCmd) {
     return "";
 }
 
-int i3GetCurrentWorkspace(std::string IPCCmd) {
-    std::string monitor = i3GetCurrentMonitor(IPCCmd);
+
+/**
+ * Gets the active workspace name in i3/sway
+ * 
+ * @param IPCCmd The ipc command (i3-msg for i3, swaymsg for sway)
+ * @return workspace name
+ */
+int i3GetActiveWorkspace(std::string IPCCmd) {
+    std::string monitor = i3GetActiveMonitor(IPCCmd);
     std::string jsonWorkspaces = exec((IPCCmd + " -t get_workspaces").c_str());
     const int jsonWorkspacesLength = static_cast<int>(jsonWorkspaces.length());
     Json::Value root;
@@ -73,17 +92,37 @@ int i3GetCurrentWorkspace(std::string IPCCmd) {
     return 0;
 }
 
-void i3MoveCurrentWindow(std::string IPCCmd, std::string newWorkspace) {
+/**
+ * Moves the active window in i3/sway to another workspace
+ * 
+ * @param IPCCmd The ipc command (i3-msg for i3, swaymsg for sway)
+ * @param newWorkspace The workspace to move the active window to
+ */
+void i3MoveActiveWindow(std::string IPCCmd, std::string newWorkspace) {
     exec((IPCCmd + " move container to workspace " + newWorkspace).c_str());
 }
 
+/**
+ * Switches to another workspace in i3/sway
+ * 
+ * @param IPCCmd The ipc command (i3-msg for i3, swaymsg for sway)
+ * @param newWorkspace The workspace to switch to
+ */
 void i3GoToWorkspace(std::string IPCCmd, std::string newWorkspace) {
     exec((IPCCmd + " workspace " + newWorkspace).c_str());
 }
 
+/**
+ * If SEPARATE_WORKSPACES_PER_MONITOR is set, it prepends the workspace name
+ * to the workspace, otherwise just returns the given workspace
+ * 
+ * @param IPCCmd The ipc command (i3-msg for i3, swaymsg for sway)
+ * @param workspace The workspace name to format
+ * @return formatted workspace name
+ */
 std::string i3FormatWorkspace(std::string IPCCmd, std::string workspace) {
     if (SEPARATE_WORKSPACES_PER_MONITOR) {
-        return i3GetCurrentMonitor(IPCCmd) + ":" + workspace;
+        return i3GetActiveMonitor(IPCCmd) + ":" + workspace;
     } else {
         return workspace;
     }

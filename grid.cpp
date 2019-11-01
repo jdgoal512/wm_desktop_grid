@@ -2,6 +2,12 @@
 #include "config.h"
 #include "grid.h"
 
+/**
+ * Gets the workspace to the left
+ * 
+ * @param currentPos Current workspace number
+ * @return position to the left currentPos, -1 if currentPos is invalid
+ */
 int left(int currentPos) {
     if (currentPos < 1 || currentPos > HEIGHT * WIDTH) {
         return -1;
@@ -17,6 +23,12 @@ int left(int currentPos) {
     }
 }
 
+/**
+ * Gets the workspace to the right
+ * 
+ * @param currentPos Current workspace number
+ * @return position to the right currentPos, -1 if currentPos is invalid
+ */
 int right(int currentPos) {
     if (currentPos < 1 || currentPos > HEIGHT * WIDTH) {
         return -1;
@@ -32,6 +44,12 @@ int right(int currentPos) {
     }
 }
 
+/**
+ * Gets the workspace to below the current one
+ * 
+ * @param currentPos Current workspace number
+ * @return position the below the current one, -1 if currentPos is invalid
+ */
 int down(int currentPos) {
     if (currentPos < 1 || currentPos > HEIGHT * WIDTH) {
         return -1;
@@ -47,6 +65,12 @@ int down(int currentPos) {
     }
 }
 
+/**
+ * Gets the workspace to above the current one
+ * 
+ * @param currentPos Current workspace number
+ * @return position the above the current one, -1 if currentPos is invalid
+ */
 int up(int currentPos) {
     if (currentPos < 1 || currentPos > HEIGHT * WIDTH) {
         return -1;
@@ -62,6 +86,13 @@ int up(int currentPos) {
     }
 }
 
+/**
+ * Gets the workspace in a direction from the current one in the desktop grid
+ * 
+ * @param currentPos Current workspace number
+ * @param direction Direction to move in
+ * @return position of the next workspace in the d
+ */
 int getNextWorkspace(int currentWorkspace, Direction direction) {
     std::cout << "Current workspace: " << currentWorkspace << std::endl;
     switch (direction) {
